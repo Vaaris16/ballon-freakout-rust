@@ -1,0 +1,46 @@
+use bevy::prelude::*;
+
+pub struct SpawnMainSpritePlugin;
+
+impl Plugin for SpawnMainSpritePlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, spawn_sprite)
+            .add_systems(Update, move_sprite);
+    }
+}
+
+#[derive(Component)]
+struct MainSprite;
+
+fn spawn_sprite(mut commands: Commands, assets_server: Res<AssetServer>) {
+    commands.spawn((
+        Sprite {
+            image: assets_server.load("main_sprite.png"),
+            custom_size: Some(Vec2::new(100., 100.)),
+            ..Default::default()
+        },
+        Transform::from_xyz(0., 0., 0.),
+        MainSprite,
+    ));
+}
+
+fn move_sprite(
+    key: ResMut<ButtonInput<KeyCode>>,
+    mut sprite: Single<&mut Transform, With<MainSprite>>,
+) {
+    if key.pressed(KeyCode::ArrowRight) {
+        sprite.translation.x += 5.;
+    }
+
+    if key.pressed(KeyCode::ArrowLeft) {
+        sprite.translation.x -= 5.;
+    }
+
+    if key.pressed(KeyCode::ArrowUp) {
+        sprite.translation.y += 5.;
+    }
+
+    if key.pressed(KeyCode::ArrowDown) {
+        sprite.translation.y -= 5.;
+    }
+}

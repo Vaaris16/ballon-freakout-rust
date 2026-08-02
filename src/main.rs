@@ -2,11 +2,13 @@ use bevy::{prelude::*, window::WindowResolution};
 
 use crate::{
     background::background_plugin::BackgroundPlugin, score::score_plugin::ScorePlugin,
+    spawn_main_sprite::spawn::SpawnMainSpritePlugin,
     spawn_player::spawn_player_plugin::SpawnPlayerPlugin,
 };
 
 mod background;
 mod score;
+mod spawn_main_sprite;
 mod spawn_player;
 
 const SCREEN_WIDTH: u32 = 700;
@@ -22,6 +24,11 @@ fn main() {
             }),
             ..Default::default()
         }))
-        .add_plugins((BackgroundPlugin, SpawnPlayerPlugin, ScorePlugin))
+        .add_plugins((
+            BackgroundPlugin,
+            SpawnPlayerPlugin,
+            ScorePlugin,
+            SpawnMainSpritePlugin,
+        ))
         .run();
 }
