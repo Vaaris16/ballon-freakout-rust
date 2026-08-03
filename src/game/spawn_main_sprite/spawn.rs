@@ -5,6 +5,7 @@ pub struct SpawnMainSpritePlugin;
 impl Plugin for SpawnMainSpritePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_sprite)
+            .add_systems(Update, out_of_bounds)
             .add_systems(Update, move_sprite);
     }
 }
@@ -42,5 +43,23 @@ fn move_sprite(
 
     if key.pressed(KeyCode::ArrowDown) {
         sprite.translation.y -= 5.;
+    }
+}
+
+fn out_of_bounds(sprite_trans: Single<&mut Transform, With<MainSprite>>, window: Single<&Window>) {
+    if sprite_trans.translation.x >= (window.width() / 2. - 50.) {
+        println!("hit x");
+    }
+
+    if sprite_trans.translation.x <= (-window.width() / 2. + 50.) {
+        println!("hit -x");
+    }
+
+    if sprite_trans.translation.y >= (window.height() / 2. - 50.) {
+        println!("hit y");
+    }
+
+    if sprite_trans.translation.y <= (-window.height() / 2. + 50.) {
+        println!("hit -y");
     }
 }
