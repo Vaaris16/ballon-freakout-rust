@@ -1,4 +1,4 @@
-use bevy::{camera::Hdr, prelude::*};
+use bevy::prelude::*;
 
 pub struct SpawnPlayerPlugin;
 

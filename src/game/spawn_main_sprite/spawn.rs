@@ -1,12 +1,21 @@
 use bevy::prelude::*;
 
+use crate::GameState;
+
 pub struct SpawnMainSpritePlugin;
+
+#[derive(SystemSet, Hash, PartialEq, Eq, Clone, Debug)]
+pub struct SpawnMainSpriteSet;
 
 impl Plugin for SpawnMainSpritePlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_sprite)
-            .add_systems(Update, out_of_bounds)
-            .add_systems(Update, move_sprite);
+        app.configure_sets(
+            Update,
+            SpawnMainSpriteSet.run_if(in_state(GameState::Playing)),
+        );
+        app.add_systems(OnEnter(GameState::Playing), spawn_sprite)
+            .add_systems(Update, out_of_bounds.in_set(SpawnMainSpriteSet))
+            .add_systems(Update, move_sprite.in_set(SpawnMainSpriteSet));
     }
 }
 
@@ -46,20 +55,20 @@ fn move_sprite(
     }
 }
 
-fn out_of_bounds(sprite_trans: Single<&mut Transform, With<MainSprite>>, window: Single<&Window>) {
-    if sprite_trans.translation.x >= (window.width() / 2. - 50.) {
-        println!("hit x");
+fn out_of_bounds(sprite_trans: Single<&Transform, With<MainSprite>>, window: Single<&Window>) {
+    if sprite_trans.translation.x == (window.width() / 2. - 50.) {
+        println!("right")
     }
 
-    if sprite_trans.translation.x <= (-window.width() / 2. + 50.) {
-        println!("hit -x");
+    if sprite_trans.translation.x == (-window.width() / 2. + 50.) {
+        println!("left")
     }
 
-    if sprite_trans.translation.y >= (window.height() / 2. - 50.) {
-        println!("hit y");
+    if sprite_trans.translation.y == (window.height() / 2. - 50.) {
+        println!("top")
     }
 
-    if sprite_trans.translation.y <= (-window.height() / 2. + 50.) {
-        println!("hit -y");
+    if sprite_trans.translation.y == (-window.height() / 2. + 50.) {
+        println!("bottom")
     }
 }

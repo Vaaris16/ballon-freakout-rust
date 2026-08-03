@@ -1,13 +1,19 @@
 use bevy::prelude::*;
 
+use crate::GameState;
+
 pub struct ScorePlugin;
+
+#[derive(SystemSet, Hash, Clone, Debug, PartialEq, Eq)]
+pub struct ScoreSet;
 
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Score(0));
-        app.add_systems(Startup, spawn_score)
-            .add_systems(Update, set_score)
-            .add_systems(Update, increment_score);
+        app.configure_sets(Update, ScoreSet.run_if(in_state(GameState::Playing)));
+        app.add_systems(OnEnter(GameState::Playing), spawn_score)
+            .add_systems(Update, set_score.in_set(ScoreSet))
+            .add_systems(Update, increment_score.in_set(ScoreSet));
     }
 }
 
