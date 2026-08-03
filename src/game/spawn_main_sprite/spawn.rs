@@ -56,19 +56,19 @@ fn move_sprite(
 }
 
 fn out_of_bounds(sprite_trans: Single<&Transform, With<MainSprite>>, window: Single<&Window>) {
-    if sprite_trans.translation.x == (window.width() / 2. - 50.) {
+    if sprite_trans.translation.x >= (window.width() / 2. - 50.) {
         println!("right")
     }
 
-    if sprite_trans.translation.x == (-window.width() / 2. + 50.) {
+    if sprite_trans.translation.x <= (-window.width() / 2. + 50.) {
         println!("left")
     }
 
-    if sprite_trans.translation.y == (window.height() / 2. - 50.) {
+    if sprite_trans.translation.y >= (window.height() / 2. - 50.) {
         println!("top")
     }
 
-    if sprite_trans.translation.y == (-window.height() / 2. + 50.) {
+    if sprite_trans.translation.y <= (-window.height() / 2. + 50.) {
         println!("bottom")
     }
 }
